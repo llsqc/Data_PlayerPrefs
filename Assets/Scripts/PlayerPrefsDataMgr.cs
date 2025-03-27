@@ -47,9 +47,15 @@ public class PlayerPrefsDataMgr
         {
             PlayerPrefs.SetString(keyName, value.ToString());
         }
-        else if (fieldType == typeof(bool))
+        else if (typeof(IList).IsAssignableFrom(fieldType))
         {
-            PlayerPrefs.SetInt(keyName, (bool)value ? 1 : 0);
+            IList list = value as IList;
+            PlayerPrefs.SetInt(keyName, list.Count);
+            int index = 0;
+            foreach (object obj in list)
+            {
+                SaveValue(obj, keyName + index++);
+            }
         }
     }
 
