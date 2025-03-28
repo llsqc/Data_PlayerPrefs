@@ -5,24 +5,20 @@ using UnityEngine;
 
 public class PlayerInfo
 {
-    public string name = "myname";
-    public int age = 10;
-    public float height = 1.7f;
-    public bool isMale = true;
+    public int age;
+    public string name;
+    public float height;
+    public bool isMale;
 
-    public List<int> list = new List<int>() { 1, 2, 3, 4, 5 };
+    public List<int> list;
 
-    public Dictionary<int, string> dic = new Dictionary<int, string>() { { 1, "a" }, { 2, "b" } };
+    public Dictionary<int, string> dic;
 
-    public ItemInfo itemInfo = new ItemInfo(3, 30);
+    public ItemInfo itemInfo;
 
-    public List<ItemInfo> itemList = new List<ItemInfo>() { new ItemInfo(1, 10), new ItemInfo(2, 20) };
+    public List<ItemInfo> itemList;
 
-    public Dictionary<int, ItemInfo> itemDic = new Dictionary<int, ItemInfo>()
-    {
-        { 1, new ItemInfo(1, 10) },
-        { 2, new ItemInfo(2, 20) },
-    };
+    public Dictionary<int, ItemInfo> itemDic;
 }
 
 public class ItemInfo
@@ -46,10 +42,15 @@ public class Test : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        PlayerInfo playerInfo = new PlayerInfo();
-        PlayerPrefsDataMgr.Instance.SaveData(playerInfo, "player1");
+        //PlayerPrefs.DeleteAll();
+
+        PlayerInfo playerInfo = PlayerPrefsDataMgr.Instance.LoadData(typeof(PlayerInfo), "player1") as PlayerInfo;
+
+        /*
+         * 存储数据
+         */
         
-        PlayerInfo playerInfo2 = PlayerPrefsDataMgr.Instance.LoadData(typeof(PlayerInfo), "player1") as PlayerInfo;
+        PlayerPrefsDataMgr.Instance.SaveData(playerInfo, "player1");
     }
 
     // Update is called once per frame

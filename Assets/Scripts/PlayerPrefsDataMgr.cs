@@ -30,6 +30,8 @@ public class PlayerPrefsDataMgr
             string saveKeyName = keyName + "_" + dataType.Name + "_" + info.FieldType.Name + "_" + info.Name;
             SaveValue(info.GetValue(data), saveKeyName);
         }
+
+        PlayerPrefs.Save();
     }
 
     public void SaveValue(object value, string keyName)
@@ -111,6 +113,32 @@ public class PlayerPrefsDataMgr
         else if (fieldType == typeof(bool))
         {
             return PlayerPrefs.GetInt(keyName, 0) == 1;
+        }
+        else if (typeof(IList).IsAssignableFrom(fieldType))
+        {
+            int count = PlayerPrefs.GetInt(keyName, 0);
+            IList list = Activator.CreateInstance(fieldType) as IList;
+            for (int i = 0; i < count; i++)
+            {
+                list.Add(LoadValue(fieldType.GetGenericArguments()[0], keyName + i));
+            }
+
+            return list;
+        }
+        else if (typeof(IDictionary).IsAssignableFrom(fieldType))
+        {
+            int count = PlayerPrefs.GetInt(keyName, 0);
+            IDictionary dic = Activator.CreateInstance(fieldType) as IDictionary;
+            for (int i = 0; i < count; i++)
+            {
+                dic.Add(LoadValue(fieldType.GetGenericArguments()[0], keyName + "_key_" + i), LoadValue(fieldType.GetGenericArguments()[1], keyName + "_value_" + i));
+            }
+
+            return dic;
+        }
+        else
+        {
+            LoadData(fieldType, keyName);
         }
 
         return null;
