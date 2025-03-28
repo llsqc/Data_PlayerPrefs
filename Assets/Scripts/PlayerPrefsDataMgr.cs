@@ -70,10 +70,49 @@ public class PlayerPrefsDataMgr
                 ++index;
             }
         }
+        else
+        {
+            SaveData(value, keyName);
+        }
     }
 
-    public object LoadData(Type type, string keyName)
+    public object LoadData(Type dataType, string keyName)
     {
+        object data = Activator.CreateInstance(dataType);
+        FieldInfo[] infos = dataType.GetFields();
+
+        string loadKeyName = "";
+        FieldInfo info;
+        for (int i = 0; i < infos.Length; i++)
+        {
+            info = infos[i];
+            loadKeyName = keyName + "_" + dataType.Name + "_" + info.FieldType.Name + "_" + info.Name;
+
+            info.SetValue(data, LoadValue(info.FieldType, loadKeyName));
+        }
+
+        return data;
+    }
+
+    private object LoadValue(Type fieldType, string keyName)
+    {
+        if (fieldType == typeof(int))
+        {
+            return PlayerPrefs.GetInt(keyName, 0);
+        }
+        else if (fieldType == typeof(float))
+        {
+            return PlayerPrefs.GetFloat(keyName, 0);
+        }
+        else if (fieldType == typeof(string))
+        {
+            return PlayerPrefs.GetString(keyName, "");
+        }
+        else if (fieldType == typeof(bool))
+        {
+            return PlayerPrefs.GetInt(keyName, 0) == 1;
+        }
+
         return null;
     }
 }
