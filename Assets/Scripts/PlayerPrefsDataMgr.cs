@@ -54,7 +54,20 @@ public class PlayerPrefsDataMgr
             int index = 0;
             foreach (object obj in list)
             {
-                SaveValue(obj, keyName + index++);
+                SaveValue(obj, keyName + index);
+                ++index;
+            }
+        }
+        else if (typeof(IDictionary).IsAssignableFrom(fieldType))
+        {
+            IDictionary dic = value as IDictionary;
+            PlayerPrefs.SetInt(keyName, dic.Count);
+            int index = 0;
+            foreach (object key in dic.Keys)
+            {
+                SaveValue(key, keyName + "_key_" + index);
+                SaveValue(dic[key], keyName + "_value_" + index);
+                ++index;
             }
         }
     }

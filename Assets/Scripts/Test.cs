@@ -11,6 +11,8 @@ public class PlayerInfo
     public bool isMale = true;
 
     public List<int> list = new List<int>() { 1, 2, 3, 4, 5 };
+
+    public Dictionary<int, string> dic = new Dictionary<int, string>() { { 1, "a" }, { 2, "b" } };
 }
 
 public class Test : MonoBehaviour
